@@ -9,7 +9,7 @@ let loginStatus = null;
 socket.on("reconnect", (info)=>{
   console.log("se salió");
   if (WatchStatic == "") WatchStatic = info;
-  socket.emit("register", loginPlayer);
+  socket.emit("actualizando", loginPlayer);
 })
 
 

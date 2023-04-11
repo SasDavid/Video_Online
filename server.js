@@ -70,20 +70,22 @@ io.on('connection', (socket)=>{
 
 	io.emit("reconnect", videoURL);
 
-	socket.on("register", data=>{
+	socket.on("actualizando", data=>{
 
 		if(data == null){
 			socket.emit("register");
 			return;
 		}
 
+		//Si no hay registro, registra este
 		if(usuariosRegister.length < 1){
 			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
 			io.emit("login", usuariosClient());
-		} else {
+		} else { //Si hay registros, busca uno con estas datas y aplicalas para la reconexión
 			for (let i = 0; i < usuariosRegister.length; i++) {
 				if(usuariosRegister[i].clave == data.clave){
 					usuariosRegister[i].id = socket;
+					io.emit("login", usuariosClient());
 				}
 			}
 		}
