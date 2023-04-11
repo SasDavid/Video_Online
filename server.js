@@ -68,7 +68,7 @@ io.on('connection', (socket)=>{
 
 
 
-	io.emit("reconnect", videoURL);
+	socket.emit("reconnect", videoURL);
 
 	socket.on("actualizando", data=>{
 
@@ -85,10 +85,9 @@ io.on('connection', (socket)=>{
 			for (let i = 0; i < usuariosRegister.length; i++) {
 				if(usuariosRegister[i].clave == data.clave){
 					usuariosRegister[i].id = socket;
+					io.emit("login", usuariosClient());
 				}
 			}
-
-			io.emit("login", usuariosClient());
 		}
 		
 	})

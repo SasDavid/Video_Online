@@ -43,6 +43,7 @@ containerRegister.addEventListener("submit", e =>{
 })
 
 socket.on("login", data=>{
+  console.log("actualizandoPlayers")
   let documentFrag = document.createDocumentFragment();
 
   for (let i = 0; i < data.length; i++) {
@@ -875,7 +876,6 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
-  console.log("onPlayer");
   loginStatus = "Conectado";
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
@@ -972,6 +972,7 @@ function onPlayerStateChange(event) {
       actualizarTime("all");
       audioNull = false;
       audioNullF();
+      console.log("Conectado");
       socket.emit("changeStatus", "Conectado");
       addTituloVideo(event.target.videoTitle, 0);
       panelIconB = true;
