@@ -68,7 +68,7 @@ io.on('connection', (socket)=>{
 
 
 
-	socket.emit("reconnect", videoURL);
+	io.emit("reconnect", videoURL);
 
 	socket.on("register", data=>{
 
@@ -219,23 +219,3 @@ app.post("/url", (req, res) =>{
 	}
 	// console.log(subStr); // "Mundo!"
 })
-    // if(!on){ alert("Error en cargar Api"); }
-app.get('/mensaje', (req, res) => {
-  // const jsCode = 'setTimeout(() => { if(!on){ alert("Conexión fallida :("); history.go() }; }, 7000); '; // Código que se enviará al cliente
- // Código que se enviará al cliente
-
-  // res.send(jsCode);
-
-  // res.set('Content-Type', 'application/javascript');
-  // res.send(jsCode);
-
-  // Es importante tener en cuenta que al eliminar el elemento <script> después de su ejecución, 
-  // no se puede garantizar que el código se haya ejecutado completamente antes de que se elimine 
-  // el elemento. En algunos casos, puede ser necesario esperar una cantidad de tiempo específica 
-  // antes de eliminar el elemento <script>. Sin embargo, para la mayoría de los casos, el código 
-  // debería ejecutarse lo suficientemente rápido como para que esto no sea un problema.
-
-
-  // const jsCode = `function myFunction() { console.log("wewe"); setTimeout((console.log("buenas")), 5000) }`;
-  // res.json({ code: jsCode });
-});

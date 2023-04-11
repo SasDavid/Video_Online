@@ -1,11 +1,5 @@
 const socket = io();
 
-fetch("/mensaje")
-.then(res => res.text())
-.then(data => {
-  eval(data);
-})
-
 
 let WatchStatic = "";
 let loginPlayer = null;
@@ -860,20 +854,16 @@ containerAudio.addEventListener("click", e =>{
 
 const inputRange = document.querySelector(".inputRange");
 let inputValorGuardado = 50;
-function setVolumen(){
+
+
+inputRange.addEventListener("click", e =>{
 
   player.setVolume(inputRange.value);
 
-  inputRange.addEventListener("input", ()=>{
-    player.setVolume(inputRange.value);
-  })
+  e.stopPropagation();
+})
 
-  inputRange.addEventListener("click", e=>{
-    inputValorGuardado = inputRange.value;
-    e.stopPropagation();
-  })
 
-}
 
 let on = false;
 function onPlayerReady(event) {
