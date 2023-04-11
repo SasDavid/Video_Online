@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="img/logo.ico">
+  <meta name="keywords" content="Videos, compartidos, juntos, charlar, chat, online">
+  <meta name="author" content="Deivis">
+  <meta name="description" content="Sitio web para mirar vídeos de Youtube con amigos mientras charlan">
+
+<!--   <script src="https://www.youtube.com/iframe_api" onerror='alert("Conexión fallida") history.go()'></script> -->
+
+  <title>Reproductor de vídeo</title>
+
+</head>
+<body style="padding: 5px; overflow: hidden;">
+
+
+<!-- </div> -->
+
+<h1>Beta - 0.7.0</h1>
+
+<div id="container-online">
+  <!-- <div class="person">
+    name: David <br>
+    status: cargando...
+  </div> -->
+</div>
+
+
+
+<!-- -------------------------- Video Youtube ---------------------------------------- -->
+
+<div style="opacity: 1" id="title-video">|</div>
+  
+
+<div id="container-grid">
+
+  <div class="container-video">
+
+    <div class="container-video-border"></div>
+
+    <div class="panel-completo">
+         <div style="display: none;" class="panel-icon">
+           <div class="container-icon-youtube">
+            <div id="icon-youtube-pause">
+               <div class="icon-youtube-1"></div>
+               <div class="icon-youtube-2"></div>
+               <div style="display: none;" id="container-icon-youtube-resumen">
+                 <div class="icon-youtube-3"></div>
+                 <div class="icon-youtube-4"></div>
+               </div>
+            </div>
+          </div>
+         </div>
+
+         <div style="transform: translateY(30px);" id="panel-inferior">
+
+          <div id="container-svg-audio">
+            <svg class="svg-sub svg-audio" aria-hidden="true" focusable="false">
+              <path d="M12.4 12.5l2.1-2.1 2.1 2.1 1.4-1.4L15.9 9 18 6.9l-1.4-1.4-2.1 2.1-2.1-2.1L11 6.9 13.1 9 11 11.1zM3.786 6.008H.714C.286 6.008 0 6.31 0 6.76v4.512c0 .452.286.752.714.752h3.072l4.071 3.858c.5.3 1.143 0 1.143-.602V2.752c0-.601-.643-.977-1.143-.601L3.786 6.008z"></path>
+            </svg>
+            <svg class="svg-sub svg-audio" aria-hidden="true" focusable="false">
+              <path d="M15.6 3.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4C15.4 5.9 16 7.4 16 9c0 1.6-.6 3.1-1.8 4.3-.4.4-.4 1 0 1.4.2.2.5.3.7.3.3 0 .5-.1.7-.3C17.1 13.2 18 11.2 18 9s-.9-4.2-2.4-5.7z"></path><path d="M11.282 5.282a.909.909 0 000 1.316c.735.735.995 1.458.995 2.402 0 .936-.425 1.917-.995 2.487a.909.909 0 000 1.316c.145.145.636.262 1.018.156a.725.725 0 00.298-.156C13.773 11.733 14.13 10.16 14.13 9c0-.17-.002-.34-.011-.51-.053-.992-.319-2.005-1.522-3.208a.909.909 0 00-1.316 0zm-7.496.726H.714C.286 6.008 0 6.31 0 6.76v4.512c0 .452.286.752.714.752h3.072l4.071 3.858c.5.3 1.143 0 1.143-.602V2.752c0-.601-.643-.977-1.143-.601L3.786 6.008z"></path>
+            </svg>
+          </div>
+
+          <div class="containerRange">
+            <input class="inputRange" type="range" min="0" max="100" step="1" value="50">
+          </div>
+       
+
+          <!-- <div id="svg-pause">
+            <svg class="svg" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                <g>
+                  <path d="M256,0C114.609,0,0,114.609,0,256c0,141.391,114.609,256,256,256c141.391,0,256-114.609,256-256
+                    C512,114.609,397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z
+                    "/>
+                  <path d="M353.661,237.879l-154.174-89.594c-16.844-9.969-32.987-1.938-32.987,17.844v179.766c0,19.75,16.143,27.797,32.987,17.812
+                    l152.956-89.578C369.348,264.16,370.552,247.848,353.661,237.879z"/>
+                </g>
+            </svg>
+          </div> -->
+
+          <div id="container-svg-resumen">
+            <svg class="svg-sub svg-resumen" aria-hidden="true" focusable="false">
+              <path d="M6 1H3c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h3c.6 0 1-.4 1-1V2c0-.6-.4-1-1-1zm6 0c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h3c.6 0 1-.4 1-1V2c0-.6-.4-1-1-1h-3z"></path>
+            </svg>
+
+            <svg class="svg-sub svg-resumen" aria-hidden="true" focusable="false">
+                <path d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"></path>
+            </svg>
+          </div>
+
+          <div id="panel-inferior-shadow"></div>
+
+          <div class="panel-control">
+            <div class="ytp-progress-red"></div>
+            <div class="ytp-progress-green"></div>
+            <div class="ytp-progress-blue">
+              <div style="display: none;" class="tiempoAproximado">
+                <p>01:23/10:50</p>
+              </div>
+            </div>
+          </div>
+
+          <p id="panel-time-video">0:00/0:00</p>
+
+
+
+          <div id="sub-icon">
+            <svg class="svg-sub" aria-hidden="true" focusable="false"><path class="path-sub" d="M1 1c-.6 0-1 .4-1 1v11c0 .6.4 1 1 1h4.6l2.7 2.7c.2.2.4.3.7.3.3 0 .5-.1.7-.3l2.7-2.7H17c.6 0 1-.4 1-1V2c0-.6-.4-1-1-1H1zm4.52 10.15c1.99 0 3.01-1.32 3.28-2.41l-1.29-.39c-.19.66-.78 1.45-1.99 1.45-1.14 0-2.2-.83-2.2-2.34 0-1.61 1.12-2.37 2.18-2.37 1.23 0 1.78.75 1.95 1.43l1.3-.41C8.47 4.96 7.46 3.76 5.5 3.76c-1.9 0-3.61 1.44-3.61 3.7 0 2.26 1.65 3.69 3.63 3.69zm7.57 0c1.99 0 3.01-1.32 3.28-2.41l-1.29-.39c-.19.66-.78 1.45-1.99 1.45-1.14 0-2.2-.83-2.2-2.34 0-1.61 1.12-2.37 2.18-2.37 1.23 0 1.78.75 1.95 1.43l1.3-.41c-.28-1.15-1.29-2.35-3.25-2.35-1.9 0-3.61 1.44-3.61 3.7 0 2.26 1.65 3.69 3.63 3.69z" fill-rule="evenodd"></path></svg>
+          </div>
+          <div id="velocidad-icon">
+            <svg class="svg-sub" aria-hidden="true" focusable="false"><path class="path-velocidad" d="M16.135 7.784a2 2 0 01-1.23-2.969c.322-.536.225-.998-.094-1.316l-.31-.31c-.318-.318-.78-.415-1.316-.094a2 2 0 01-2.969-1.23C10.065 1.258 9.669 1 9.219 1h-.438c-.45 0-.845.258-.997.865a2 2 0 01-2.969 1.23c-.536-.322-.999-.225-1.317.093l-.31.31c-.318.318-.415.781-.093 1.317a2 2 0 01-1.23 2.969C1.26 7.935 1 8.33 1 8.781v.438c0 .45.258.845.865.997a2 2 0 011.23 2.969c-.322.536-.225.998.094 1.316l.31.31c.319.319.782.415 1.316.094a2 2 0 012.969 1.23c.151.607.547.865.997.865h.438c.45 0 .845-.258.997-.865a2 2 0 012.969-1.23c.535.321.997.225 1.316-.094l.31-.31c.318-.318.415-.781.094-1.316a2 2 0 011.23-2.969c.607-.151.865-.547.865-.997v-.438c0-.451-.26-.846-.865-.997zM9 12a3 3 0 110-6 3 3 0 010 6z"></path></svg>
+            <div style="display: none;" id="velocidad-container-black">
+              <div style="transform: translateY(200px);" id="velocidad-container">
+                <ul id="velocidad-ul">
+                  <li class="velocidad-li">2</li>
+                  <li class="velocidad-li">1.75x</li>
+                  <li class="velocidad-li">1.50x</li>
+                  <li class="velocidad-li">1.25x</li>
+                  <li class="velocidad-li">1</li>
+                  <li class="velocidad-li">0.75x</li>
+                  <li class="velocidad-li">0.50x</li>
+                  <li class="velocidad-li">0.25x</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div id="container-screen">
+            <svg class="svg-sub" aria-hidden="true" focusable="false"><path class="path-screen" d="M10 3h3.6l-4 4L11 8.4l4-4V8h2V1h-7zM7 9.6l-4 4V10H1v7h7v-2H4.4l4-4z"></path></svg>
+          </div>
+
+        </div>
+
+    </div>
+
+    <!-- <div id="panel-superior"></div> -->
+
+    <div class="video-pause"></div>
+
+    
+ 
+    <div id="player" class="html5-main-video"></div>
+  </div>
+
+  <!-- Chat online -->
+
+  <div class="chat-container">
+    <ul class="chat-messages"></ul>
+    <form id="container-mensaje">
+      <input autocomplete="off" id="mensaje" type="text" placeholder="mensaje">
+      <button class="enviarMensaje">Enviar Mensaje</button>
+    </form>
+  </div>
+
+</div>
+
+<form action="" id="form-url-video">
+  <input type="text" spellcheck="false" autocomplete="off" placeholder="URL DE VIDEO" id="Url-Youtube"></input>
+  <button type="submit" id="Url-button">Reproducir</button>
+</form>
+
+
+<div id="container-informe"></div>
+<div style="transform: translateY(-400px);" class="mensaje-informe">
+  <div class="informe">Vídeo no Disponible</div>
+  <button class="mensaje-accept">Let's go</button>
+</div>
+
+<section style="opacity: 1" id="section-register">
+  <form action="" id="container-register">
+    <input minlength="3" spellcheck maxlength="8" class="register-input" type="text" placeholder="Nombre">
+    <input minlength="4" spellcheck maxlength="10" class="register-input" type="password" placeholder="Clave">
+    <button class="register-button" type="submit">Ingresar</button>
+  </form>
+</section>
+
+
+
+
+
+
+
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+  <script src="index.js" onerror='alert("Conexión fallida") history.go()' charset="utf-8"></script>
+  <script src="https://www.youtube.com/iframe_api" onerror='alert("Conexión fallida"); history.go()'></script>
+
+</body>
+</html>
