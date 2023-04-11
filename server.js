@@ -68,7 +68,7 @@ io.on('connection', (socket)=>{
 
 
 
-	socket.emit("reconnect", videoURL);
+	io.emit("reconnect", videoURL);
 
 	socket.on("register", data=>{
 
