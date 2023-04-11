@@ -94,8 +94,7 @@ io.on('connection', (socket)=>{
 
 	socket.on("login", data=>{
 		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(socket == usuariosRegister[i].socket)
-				return;
+			if(socket == usuariosRegister[i].socket) return;
 		}
 
 		if(data.name.length > 8) return;
