@@ -882,6 +882,7 @@ function onPlayerReady(event) {
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();
+  tituloNum = 0;
   addTituloVideo(event.target.videoTitle, 0);
   videoReproducido = true;
   modelInferiorB = true;
@@ -976,6 +977,7 @@ function onPlayerStateChange(event) {
       audioNullF();
       loginPlayer.status = "Conectado";
       socket.emit("changeStatus", "Conectado");
+      tituloNum = 0;
       addTituloVideo(event.target.videoTitle, 0);
       panelIconB = true;
       videoReproducido = true;
