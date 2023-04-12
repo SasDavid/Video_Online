@@ -3,7 +3,6 @@ const socket = io();
 
 let WatchStatic = "";
 let loginPlayer = null;
-let loginStatus = null;
 
 
 socket.on("reconnect", (info)=>{
@@ -29,8 +28,7 @@ containerRegister.addEventListener("submit", e =>{
   loginPlayer = {};
   loginPlayer.name = inputRegister[0].value;
   loginPlayer.clave = inputRegister[1].value;
-  if(loginStatus != null) loginPlayer.status = loginStatus;
-  else loginPlayer.status = "Cargando... 1/2";
+  if(loginPlayer.status == undefined) loginPlayer.status = "Cargando... 1/2";
   socket.emit("login", loginPlayer);
 
   document.getElementById("section-register").style.opacity = 0;
