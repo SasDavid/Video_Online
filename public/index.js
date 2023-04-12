@@ -229,7 +229,7 @@ panelCompleto.addEventListener("mouseleave", e=>{
         
       if(num == 2){
          minutes = Math.floor(timeInSeconds / 60);
-         seconds = Math.round(timeInSeconds % 60);
+         seconds = Math.floor(timeInSeconds % 60);
          return `${minutes}:${(seconds < 10 ? '0' : '')}${seconds}`;
       }
 
