@@ -878,7 +878,6 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
-  loginPlayer.status = "Conectado";
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();
