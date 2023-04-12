@@ -7,7 +7,6 @@ let loginStatus = null;
 
 
 socket.on("reconnect", (info)=>{
-  console.log("se salió");
   if (WatchStatic == "") WatchStatic = info;
   socket.emit("actualizando", loginPlayer);
 })
@@ -32,7 +31,6 @@ containerRegister.addEventListener("submit", e =>{
   loginPlayer.clave = inputRegister[1].value;
   if(loginStatus != null) loginPlayer.status = loginStatus;
   else{
-    console.log("Logeándose");
     loginPlayer.status = "Cargando... 1/2";
   } 
   socket.emit("login", loginPlayer);
@@ -666,6 +664,7 @@ mensajeError.addEventListener("click", ()=>{
 function onError(event) {
 
     if(event.data == 150){
+      loginPlayer.status = "Esperando...";
       socket.emit("changeStatus", "Esperando...");
       panelIcon.style.display = "none";
       containerError.style.display = "block";
@@ -879,7 +878,7 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
-  loginStatus = "Conectado";
+  loginPlayer.status = "Conectado";
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();
@@ -975,7 +974,7 @@ function onPlayerStateChange(event) {
       actualizarTime("all");
       audioNull = false;
       audioNullF();
-      console.log("Conectado");
+      loginPlayer.status = "Conectado";
       socket.emit("changeStatus", "Conectado");
       addTituloVideo(event.target.videoTitle, 0);
       panelIconB = true;
@@ -999,6 +998,7 @@ function onPlayerStateChange(event) {
   }
 
   if(event.data == 2){
+    loginPlayer.status = "Vídeo pausado...";
     socket.emit("changeStatus", "Vídeo pausado...");
     videoReproducido = true;
     panelIconB = true;
@@ -1016,6 +1016,7 @@ function onPlayerStateChange(event) {
       return;
     }
 
+    loginPlayer.status = "Watch";
     socket.emit("changeStatus", "Watch");
     subStatus = true;
     videoOn = true;
@@ -1033,6 +1034,7 @@ function onPlayerStateChange(event) {
   }
 
   if(event.data == 0){
+    loginPlayer.status = "Finalizado";
     socket.emit("changeStatus", "Finalizado");
     barraAzulFull();
     videoStatus = false;
@@ -1170,7 +1172,8 @@ socket.on("mensaje-it", info=>{
 socket.on("addVideo", url=>{
 
   if(player != undefined){
-    socket.emit("changeStatus", "Cargando video...");
+    loginPlayer.status = "Cargando video...";
+    socket.emit("changeStatus", "Cargando vídeo...");
 
       blueProgressBar.style.width = 0;
       progressBar.style.width = 0;
