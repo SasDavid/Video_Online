@@ -25,10 +25,12 @@ containerRegister.addEventListener("submit", e =>{
 
   if(inputRegister[0].value.length > 8) return;
 
-  loginPlayer = {};
+  if(loginPlayer == null) loginPlayer = {"status" : "Cargando... 1/2"};
+
   loginPlayer.name = inputRegister[0].value;
   loginPlayer.clave = inputRegister[1].value;
-  if(loginPlayer.status == undefined) loginPlayer.status = "Cargando... 1/2";
+  console.log(loginPlayer);
+
   socket.emit("login", loginPlayer);
 
   document.getElementById("section-register").style.opacity = 0;
@@ -874,7 +876,9 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
-  if(loginPlayer == null) loginPlayer = {"status": "Conectado"};
+  if(loginPlayer == null) loginPlayer = {"status" : "Conectado"};
+  else loginPlayer.status = "Conectado";
+
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();
