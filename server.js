@@ -113,6 +113,14 @@ io.on('connection', (socket)=>{
 
 		if(data.name.length > 8) return;
 		console.log(data);
+
+
+		for (let i = 0; i < usuariosRegister.length; i++) {
+			if(usuariosRegister[i].socket == socket){
+				return;
+			}
+		}
+
 		usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
 		io.emit("login", usuariosClient());
 	})

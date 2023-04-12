@@ -2,7 +2,7 @@ const socket = io();
 
 
 let WatchStatic = "";
-let loginPlayer = null;
+let loginPlayer = {};
 let loginStatus = null;
 
 
@@ -878,6 +878,7 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
+  loginPlayer.status = "Conectado";
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();
