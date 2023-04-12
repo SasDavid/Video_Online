@@ -30,9 +30,9 @@ containerRegister.addEventListener("submit", e =>{
   loginPlayer.name = inputRegister[0].value;
   loginPlayer.clave = inputRegister[1].value;
   if(loginStatus != null) loginPlayer.status = loginStatus;
-  else{
-    loginPlayer.status = "Cargando... 1/2";
-  } 
+  // else{
+  //   loginPlayer.status = "Cargando... 1/2";
+  // } 
   socket.emit("login", loginPlayer);
 
   document.getElementById("section-register").style.opacity = 0;
