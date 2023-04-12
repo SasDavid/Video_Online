@@ -75,7 +75,19 @@ io.on('connection', (socket)=>{
 		if(data == null){
 			socket.emit("register");
 			return;
+		} else {
+
+			for (let i = 0; i < usuariosRegister.length; i++) {
+				if(usuariosRegister[i].socket == socket){
+					return;
+				}
+			}
+
+			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
+			io.emit("login", usuariosClient());
 		}
+
+		return;
 
 		//Si no hay registro, registra este
 		if(usuariosRegister.length < 1){
@@ -85,9 +97,11 @@ io.on('connection', (socket)=>{
 			for (let i = 0; i < usuariosRegister.length; i++) {
 				if(usuariosRegister[i].clave == data.clave){
 					usuariosRegister[i].id = socket;
-					io.emit("login", usuariosClient());
 				}
 			}
+
+			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
+			io.emit("login", usuariosClient());
 		}
 		
 	})
