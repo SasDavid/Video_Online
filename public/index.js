@@ -2,7 +2,7 @@ const socket = io();
 
 
 let WatchStatic = "";
-let loginPlayer = {};
+let loginPlayer = null;
 let loginStatus = null;
 
 
@@ -30,9 +30,7 @@ containerRegister.addEventListener("submit", e =>{
   loginPlayer.name = inputRegister[0].value;
   loginPlayer.clave = inputRegister[1].value;
   if(loginStatus != null) loginPlayer.status = loginStatus;
-  // else{
-  //   loginPlayer.status = "Cargando... 1/2";
-  // } 
+  else loginPlayer.status = "Cargando... 1/2";
   socket.emit("login", loginPlayer);
 
   document.getElementById("section-register").style.opacity = 0;
@@ -878,7 +876,7 @@ function onPlayerReady(event) {
     console.log('Duración del video:', duration);
   });
 
-  loginPlayer.status = "Conectado";
+  if(loginPlayer == null) loginPlayer = {"status": "Conectado"};
   socket.emit("changeStatus", "Conectado");
   audioNull = false;
   audioNullF();

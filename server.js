@@ -77,6 +77,8 @@ io.on('connection', (socket)=>{
 			return;
 		} else {
 
+			console.log("ewewewe");
+
 			for (let i = 0; i < usuariosRegister.length; i++) {
 				if(usuariosRegister[i].socket == socket){
 					return;
