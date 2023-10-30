@@ -1,13 +1,7 @@
 import express from "express";
 import http from "http";
 import {Server as ServerSocket} from "socket.io";
-
-import path from "path";
-// const request = require("request");
-
-// const bodyParser = require("body-parser");
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
+// import path from "path";
 
 const app = express();
 const server = http.createServer(app);
@@ -42,6 +36,25 @@ server.listen(PORT, ()=>{
 	nuevaEntrada = [];
 	console.log("Servidor Iniciado");
 });
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+
+app.get("/sala", (req, res)=>{
+	console.log("Welcome a la sala");
+	res.redirect("salaOculta");
+	res.sendFile(__dirname, "salita.html");
+	
+})
+
+app.get("/salaOculta", (req, res)=>{
+	res.sendFile(__dirname, "salaOculta", "index.html")
+})
+
+
 
 
 let usuariosRegister = [];
