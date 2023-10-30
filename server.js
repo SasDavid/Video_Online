@@ -1,24 +1,29 @@
-const express = require("express");
+import express from "express";
+import http from "http";
+import {Server as ServerSocket} from "socket.io";
+
+import path from "path";
+// const request = require("request");
+
+// const bodyParser = require("body-parser");
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+
 const app = express();
-
-const path = require("path");
-const request = require("request");
-
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+const server = http.createServer(app);
+const io = new ServerSocket(server);
 
 
+const PORT = process.env.PORT ?? 7050;
 
 
+app.use(express.json());
 
-//settings
-app.set("port", process.env.PORT || 7050);
 
 
 //static files
-app.use(express.static(path.join(__dirname + '/public')));
-console.log(__dirname + "/public")
+app.use(express.static('public'));
+// console.log(__dirname + "/public")
 
 
 
@@ -28,24 +33,15 @@ let onNum = 0;
 let nuevaEntrada = [];
 let videoURL = "";
 let nuevaURL = "";
+
+
 //start server
-const server = app.listen(app.get("port"), ()=>{
+server.listen(PORT, ()=>{
 	onOnlineId = [];
 	onNum = 0;
 	nuevaEntrada = [];
 	console.log("Servidor Iniciado");
 });
-
-
-
-//WebSocket
-
-const SocketIO = require("socket.io");
-const io = SocketIO(server);
-
-
-
-
 
 
 let usuariosRegister = [];
@@ -202,6 +198,8 @@ io.on('connection', (socket)=>{
 
 
 app.post("/url", (req, res) =>{
+
+	console.log(req.body);
 
 	const str = req.body.data;
 	// DEBO HACER QUE ENCUENTRE EL PRIMER v=
