@@ -1,46 +1,44 @@
 import express from "express";
-import http from "http";
+import http from "node:http";
 import {Server as ServerSocket} from "socket.io";
-// import path from "path";
+
+// Get URL Random
+import { v4 as uuidv4 } from 'uuid';
+
+// Get __dirname
+import path from 'node:path';
+import url from 'node:url';
+
+// Get Cookies
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const server = http.createServer(app);
 const io = new ServerSocket(server);
 
-
 const PORT = process.env.PORT ?? 7050;
 
 
+let roomOn = [];
+let roomVideo = [];
+let userInfo = [];
+
 app.use(express.json());
+app.use(express.text());
 
-
-
-//static files
 app.use(express.static('public'));
-// console.log(__dirname + "/public")
 
+app.use(cookieParser());
 
-
-
-let onOnlineId = [];
-let onNum = 0;
-let nuevaEntrada = [];
 let videoURL = "";
 let nuevaURL = "";
 
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 //start server
 server.listen(PORT, ()=>{
-	onOnlineId = [];
-	onNum = 0;
-	nuevaEntrada = [];
 	console.log("Servidor Iniciado");
 });
-
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 app.get("/sala", (req, res)=>{
@@ -54,87 +52,97 @@ app.get("/salaOculta", (req, res)=>{
 	res.sendFile(__dirname, "salaOculta", "index.html")
 })
 
+app.post(`/roomCreate`, (req, res)=>{
+	//Create a room
 
+	res.cookie('username', req.body, { httpOnly: true, path: "/", expires: 0 });
 
+	let uuidURL = uuidv4();
 
-let usuariosRegister = [];
-let usuarios = [];
-
-function usuariosClient (){
-
-	usuarios = [];
-
-	for (let i = 0; i < usuariosRegister.length; i++) {
-		usuarios.push({name: usuariosRegister[i].name, status: usuariosRegister[i].status});
+	if(!roomOn.includes(uuidURL)){
+		roomOn.push(uuidURL);
 	}
 
-	return usuarios;
-}
+
+	res.redirect(`room/${uuidURL}`);
+})
+
+app.get(`/room/:roomID`, (req, res)=>{
+	//Join to the room created
+
+	if(roomOn.includes(req.params.roomID)){
+		res.cookie('room', req.params.roomID, { httpOnly: true, path: "/", expires: 0 });
+		res.sendFile(path.join(__dirname, "public", "room", "index.html"));
+	} 
+	else {
+		res.redirect("/");
+	}
+
+})
 
 
 io.on('connection', (socket)=>{
 
+	let cookieSocket = socket.handshake.headers.cookie.split(";");
+	let videoplayback;
+	
+	userInfo.push({
+		socket,
+		username: cookieSocket[0].split("=")[1],
+		room: cookieSocket[1].split("=")[1],
+		status: "Conectando"
+	});
 
+	if(roomVideo.length > 0){
 
+		videoplayback = roomVideo.find(res => {
+			if(res.room == cookieSocket[1].split("=")[1]){
+				return true;
+			}
+		})
+	}
+
+	if(videoplayback != undefined){
+
+		socket.emit("start", {
+			username: cookieSocket[0].split("=")[1],
+			video: videoplayback.video ?? ""
+		});
+
+	} else {
+		socket.emit("start", {
+			username: cookieSocket[0].split("=")[1]
+		});
+	}
+
+	socket.on("modifier", (data)=>{
+
+		//Encontrar el usuario para el cambio
+		let modifierUser = userInfo.find(res => res.socket.id == socket.id);
+
+		//Encontrar el index del usuario
+		let getIndex = userInfo.findIndex(res => res.socket.id == socket.id);
+		//Modificar valor del usuario
+		userInfo[getIndex].status = data;
+
+		//Reagrupar a los usuarios en la misma room
+		let roomListen = userInfo.filter(res => res.room == modifierUser.room);
+
+		const roomUsersName	= roomListen.map(res => {
+			return {
+				username: res.username,
+				status: res.status
+			}
+		});
+
+		roomListen.forEach(client => {
+			
+			client.socket.emit("addUser", roomUsersName);
+			
+		})
+	});
 
 	socket.emit("reconnect", videoURL);
-
-	socket.on("actualizando", data=>{
-
-		if(data == null){
-			socket.emit("register");
-			return;
-		} else {
-
-			console.log("ewewewe");
-
-			for (let i = 0; i < usuariosRegister.length; i++) {
-				if(usuariosRegister[i].socket == socket){
-					return;
-				}
-			}
-
-			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
-			io.emit("login", usuariosClient());
-		}
-
-		return;
-
-		//Si no hay registro, registra este
-		if(usuariosRegister.length < 1){
-			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
-			io.emit("login", usuariosClient());
-		} else { //Si hay registros, busca uno con estas datas y aplicalas para la reconexión
-			for (let i = 0; i < usuariosRegister.length; i++) {
-				if(usuariosRegister[i].clave == data.clave){
-					usuariosRegister[i].id = socket;
-				}
-			}
-
-			usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
-			io.emit("login", usuariosClient());
-		}
-		
-	})
-
-	socket.on("login", data=>{
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(socket == usuariosRegister[i].socket) return;
-		}
-
-		if(data.name.length > 8) return;
-		console.log(data);
-
-
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(usuariosRegister[i].socket == socket){
-				return;
-			}
-		}
-
-		usuariosRegister.push({name: data.name, clave: data.clave, status: data.status, id: socket});
-		io.emit("login", usuariosClient());
-	})
 
 	socket.on("changeStatus", data=>{
 
@@ -153,105 +161,104 @@ io.on('connection', (socket)=>{
 
   socket.on('disconnect', () => {
 
-  	let arraySalida = usuariosRegister.filter(res => res.id != socket);
-  	usuariosRegister = arraySalida;
-  	io.emit("login", usuariosClient());
+	userInfo = userInfo.filter(element => element.socket.id != socket.id);
 
-  	return;
+	const roomUsersName	= userInfo.map(res => {
+		return {
+			username: res.username,
+			status: res.status
+		}
+	});
+
+	userInfo.forEach(client => {
+		
+		client.socket.emit("addUser", roomUsersName);
+		
+	})
 
   });
 
 	socket.on("mensaje", (info)=>{
 
-		let autor = "";
+		if(info.msg.length < 1) return;
 
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(socket == usuariosRegister[i].id){
-				autor = usuariosRegister[i].name;
-			}
-		}
+		let autor = userInfo.filter(res => res.socket.id == socket.id);
 
-		if(info.msg.length > 0) {
-			socket.broadcast.emit("mensaje-he", `${autor + ": " + info.msg}`);
-			
-			socket.emit("mensaje-valid", info.num);
-			
-		}	
+		let sortListen = userInfo.filter(res => res.room == autor[0].room && res.socket.id != socket.id);
+
+		socket.emit("mensaje-valid", info.num);
+
+
+		sortListen.forEach(res => {
+			socket.broadcast.emit("mensaje-he", `${autor[0].username + ": " + info.msg}`);
+		})
+	
 	});
 
-	socket.on("server-mensaje", (info)=>{
+	socket.on("videoChanged", (info)=>{
 
-		let autor = "";
+		let userEmit = userInfo.find(res => res.socket.id == socket.id);
 
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(socket == usuariosRegister[i].id){
-				autor = usuariosRegister[i].name;
-			}
-		}
+		let roomListen = userInfo.filter(res => res.room == userEmit.room);
 
-		if(info.length > 0) {
-			if(info == "Han cambiado el vídeo") io.emit("mensaje-it", `${autor} cambió el vídeo`);
-		}	
+		let autor = userEmit.username;
+
+		roomListen.forEach(res => {
+			res.socket.emit("mensaje-it", `${autor} cambió el vídeo`);
+		})
+
 	});
 
 	socket.on("sincronizar", info=>{
 
-		let autor = "";
+		let userEmit = userInfo.find(res => res.socket.id == socket.id);
 
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(socket == usuariosRegister[i].id){
-				autor = usuariosRegister[i].name;
-			}
+		let roomListen = userInfo.filter(res => res.room == userEmit.room);
+
+		let autor = userEmit.username;
+
+		roomListen.forEach(res => {
+			io.emit("sincronizar", info);
+			io.emit("mensaje-it", `${autor} sincronizó el vídeo`);
+		})
+	})
+
+
+	socket.on("requestVideoChange", (data) =>{
+
+		const str = data;
+
+		let lastIndex = str.indexOf("v=");
+
+		nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
+
+		if(lastIndex == -1){
+			lastIndex = str.indexOf("s/");
+			nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
+			console.log(nuevaURL);
 		}
+	
+		if(lastIndex == -1){
+			lastIndex = str.indexOf("e/");
+			nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
+			console.log(nuevaURL);
+		}
+	
+		if(lastIndex == -1) return;
+	
+	
+		let userListen = userInfo.find(res => res.socket.id == socket.id);
 
-		io.emit("sincronizar", info);
-		io.emit("mensaje-it", `${autor} sincronizó el vídeo`);
+		let roomListen = userInfo.filter(res => res.room == userListen.room);
+
+		let availableChange = roomListen.every(res => res.status != "Conectando" && res.status != "Cargando vídeo...")
+
+		console.log("El cambio es: " + availableChange);
+		if(availableChange) {
+			roomVideo.push({room: userListen.room, video: nuevaURL})
+			roomListen.forEach(res => res.socket.emit("addVideo", nuevaURL));
+			socket.emit("cleanForm");
+		}
 	})
 })
 
-
-app.post("/url", (req, res) =>{
-
-	console.log(req.body);
-
-	const str = req.body.data;
-	// DEBO HACER QUE ENCUENTRE EL PRIMER v=
-	let lastIndex = str.indexOf("v=");
-	// const subStr = str.slice(lastIndex);
-	nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
-
-	// console.log(lastIndex);
-
-	if(lastIndex == -1){
-		lastIndex = str.indexOf("s/");
-		nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
-		console.log(nuevaURL);
-	}
-
-	if(lastIndex == -1){
-		lastIndex = str.indexOf("e/");
-		nuevaURL = str.slice(lastIndex + 2, lastIndex + 2 + 11);
-		console.log(nuevaURL);
-	}
-
-	if(lastIndex == -1) return;
-
-	if(nuevaURL != videoURL){
-
-		for (let i = 0; i < usuariosRegister.length; i++) {
-			if(((((usuariosRegister[i].status != "Conectado")
-			&& usuariosRegister[i].status != "Esperando...")
-			&& usuariosRegister[i].status != "Watch")
-			&& usuariosRegister[i].status != "Vídeo pausado...")
-			&& usuariosRegister[i].status != "Finalizado") return;
-		}
-
-		videoURL = nuevaURL;
-		io.emit("addVideo", videoURL);
-		res.send("Accept");
-	} else {
-		console.log("other");
-		res.send("other")
-	}
-	// console.log(subStr); // "Mundo!"
-})
