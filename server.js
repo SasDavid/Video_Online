@@ -45,17 +45,18 @@ app.get("/sala", (req, res)=>{
 	console.log("Welcome a la sala");
 	res.redirect("salaOculta");
 	res.sendFile(__dirname, "salita.html");
-	
 })
 
 app.get("/salaOculta", (req, res)=>{
 	res.sendFile(__dirname, "salaOculta", "index.html")
 })
 
+
+
 app.post(`/roomCreate`, (req, res)=>{
 	//Create a room
 
-	res.cookie('username', req.body, { httpOnly: true, path: "/", expires: 0 });
+	res.cookie('username', req.body, { httpOnly: true });
 
 	let uuidURL = uuidv4();
 
@@ -63,15 +64,38 @@ app.post(`/roomCreate`, (req, res)=>{
 		roomOn.push(uuidURL);
 	}
 
+	if(req.cookies.following != undefined){
 
-	res.redirect(`room/${uuidURL}`);
+		if(roomOn.includes(req.cookies.following)){
+			res.cookie("following", "000", { expires: new Date() });
+			res.redirect(`room/${req.cookies.following}`);
+		} else {
+			res.cookie("following", "000", { expires: new Date() });
+			res.redirect(`room/${uuidURL}`);
+		}
+
+	} else {
+		console.log("Sala activada: " + uuidURL)
+		res.redirect(`room/${uuidURL}`);
+	}
 })
 
 app.get(`/room/:roomID`, (req, res)=>{
 	//Join to the room created
 
+	// console.log(req.cookies.username);
+
+	if(req.cookies.username == undefined){
+
+		res.cookie("following", req.params.roomID)
+		res.redirect("/");
+		return;
+
+	}
+
 	if(roomOn.includes(req.params.roomID)){
-		res.cookie('room', req.params.roomID, { httpOnly: true, path: "/", expires: 0 });
+		console.log(req.params.roomID);
+		res.cookie('room', req.params.roomID, { httpOnly: true });
 		res.sendFile(path.join(__dirname, "public", "room", "index.html"));
 	} 
 	else {
@@ -85,6 +109,8 @@ io.on('connection', (socket)=>{
 
 	let cookieSocket = socket.handshake.headers.cookie.split(";");
 	let videoplayback;
+
+	// console.log(cookieSocket);
 	
 	userInfo.push({
 		socket,
