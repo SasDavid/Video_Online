@@ -275,7 +275,7 @@ io.on('connection', (socket)=>{
 
 		let roomListen = userInfo.filter(res => res.room == userListen.room);
 
-		let availableChange = roomListen.every(res => res.status != "Conectando" && res.status != "Cargando vídeo...")
+		let availableChange = roomListen.every(res => res.status != "Cargando vídeo...")
 
 		console.log("El cambio es: " + availableChange);
 		if(availableChange) {
