@@ -2,8 +2,11 @@ import express from "express";
 import http from "node:http";
 import {Server as ServerSocket} from "socket.io";
 
+<<<<<<< HEAD
 console.log("hasdwtt")
 
+=======
+>>>>>>> d1f2960196fddbbf452933e6ffbd1cb3d66f5b7c
 // Get URL Random
 import { v4 as uuidv4 } from 'uuid';
 
