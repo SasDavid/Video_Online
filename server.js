@@ -1,8 +1,6 @@
 import express from "express";
 import http from "node:http";
 import {Server as ServerSocket} from "socket.io";
-
-// Get URL Random
 import { v4 as uuidv4 } from 'uuid';
 
 // Get __dirname
