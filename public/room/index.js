@@ -348,11 +348,7 @@ function onPlayerStateChange(event) {
       return;
     }
 
-<<<<<<< HEAD
     socket.emit("modifier", "Watching");
-=======
-    socket.emit("modifier", "Watch");
->>>>>>> d1f2960196fddbbf452933e6ffbd1cb3d66f5b7c
 
     subStatus = true;
     videoOn = true;
