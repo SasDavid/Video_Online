@@ -1,0 +1,97 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	font-family: 'IBM Plex Mono', sans-serif;
+}
+
+#section-register{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	background: black;
+	transition: opacity 0.5s;
+}
+
+#container-register{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 600px;
+	height: 300px;
+	background: #232323;
+	padding: 2.5rem 6rem;
+	border: .2rem solid #646464;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: .8rem;
+	border-radius: 1rem;
+}
+
+.register-input{
+	color: white;
+	text-align: center;
+	background: #000;
+	width: 100%;
+	border-radius: .5rem;
+	height: 50px;
+	border: 3px solid #9b9b9b;
+	padding: .3rem;
+	outline: none;
+	font-size: 1.3rem;
+}
+
+.register-input::placeholder{
+	color: #C2C2C2;
+}
+
+.register-button{
+	width: 200px;
+	height: 50px;
+	border-radius: 10px;
+	font-size: 1.1rem;
+	background: black;
+	border: 3px solid #9b9b9b;
+	color: white;
+	cursor: pointer;
+}
+
+
+body::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+body::-webkit-scrollbar:vertical {
+    width:10px;
+}
+
+body::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+    display: none;
+} 
+
+body::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+
+body::-webkit-scrollbar-corner{
+	background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+    -webkit-appearance: none;
+}

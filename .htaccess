@@ -1,0 +1,4 @@
+RewriteEngine On
+Options +FollowSymLinks
+RewriteRule ^$ public/index.html [L]
+DirectoryIndex public/index.html
