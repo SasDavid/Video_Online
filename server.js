@@ -31,8 +31,8 @@ app.use(cookieParser());
 let videoURL = "";
 let nuevaURL = "";
 
-const __dirname = import.meta.dirname;
-console.log(__dirname + " actualizado")
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+console.log(import.meta.dirname)
 
 // const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
