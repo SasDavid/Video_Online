@@ -31,7 +31,7 @@ app.use(cookieParser());
 let videoURL = "";
 let nuevaURL = "";
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 //start server
 server.listen(PORT, ()=>{
@@ -56,36 +56,34 @@ app.post(`/roomCreate`, (req, res)=>{
 
 	res.cookie('username', req.body, { httpOnly: true });
 
-	let uuidURL = uuidv4();
-
-	if(!roomOn.includes(uuidURL)){
-		roomOn.push(uuidURL);
-	}
-
-	if(req.cookies.following != undefined){
-
-		if(roomOn.includes(req.cookies.following)){
-			res.cookie("following", "000", { expires: new Date() });
-			res.redirect(`room/${req.cookies.following}`);
-		} else {
-			res.cookie("following", "000", { expires: new Date() });
-			res.redirect(`room/${uuidURL}`);
+	// Entrar a una por invitacion
+	if(req.cookies.invited != undefined){
+		if(roomOn.includes(req.cookies.invited)){
+			res.cookie("invited", "", { expires: new Date() })
+			.redirect(`room/${req.cookies.invited}`)
 		}
-
 	} else {
-		console.log("Sala activada: " + uuidURL)
-		res.redirect(`room/${uuidURL}`);
+		// Crear una sala
+
+		let uuidURL = uuidv4();
+
+		if(!roomOn.includes(uuidURL)){
+			roomOn.push(uuidURL);
+			res.redirect(`room/${uuidURL}`);
+			return;
+		}
 	}
+	
+
 })
 
 app.get(`/room/:roomID`, (req, res)=>{
-	//Join to the room created
+	//Join to a room
 
-	// console.log(req.cookies.username);
-
+	// Entrando a una sala sin haberse logeado
 	if(req.cookies.username == undefined){
 
-		res.cookie("following", req.params.roomID)
+		res.cookie("invited", req.params.roomID)
 		res.redirect("/");
 		return;
 
@@ -102,20 +100,46 @@ app.get(`/room/:roomID`, (req, res)=>{
 
 })
 
+// app.post("/login-room", (req, res)=>{
+// 	console.log(req.cookies)
+// })
+
 
 io.on('connection', (socket)=>{
 
 	let cookieSocket = socket.handshake.headers.cookie.split(";");
 	let videoplayback;
 
-	// console.log(cookieSocket);
+	let username, room;
+
+	for(let element of cookieSocket){
+		if(element.split("=")[0] == "username"){
+			username = element.split("=")[1]
+		} else if(element.split("=")[0] == "room"){
+			room = element.split("=")[1]
+		}
+	}
 	
 	userInfo.push({
 		socket,
-		username: cookieSocket[0].split("=")[1],
-		room: cookieSocket[1].split("=")[1],
+		username,
+		room,
 		status: "Conectando"
 	});
+
+	let roomUsersName = userInfo.map(res => {
+		return {
+			username: res.username,
+			status: res.status
+		}
+	});
+
+
+	userInfo.forEach(element => {
+		element.socket.emit("addUser", roomUsersName)
+	})
+
+
 
 	if(roomVideo.length > 0){
 
@@ -139,6 +163,7 @@ io.on('connection', (socket)=>{
 		});
 	}
 
+	// Modificar el status del usuario o agregar un usuario
 	socket.on("modifier", (data)=>{
 
 		//Encontrar el usuario para el cambio
@@ -166,7 +191,7 @@ io.on('connection', (socket)=>{
 		})
 	});
 
-	socket.emit("reconnect", videoURL);
+	// socket.emit("reconnect", videoURL);
 
 	socket.on("changeStatus", data=>{
 
@@ -219,6 +244,7 @@ io.on('connection', (socket)=>{
 	
 	});
 
+	// Mensaje de cambio el video
 	socket.on("videoChanged", (info)=>{
 
 		let userEmit = userInfo.find(res => res.socket.id == socket.id);
@@ -233,21 +259,19 @@ io.on('connection', (socket)=>{
 
 	});
 
+	// Sincronizar el video
 	socket.on("sincronizar", info=>{
 
 		let userEmit = userInfo.find(res => res.socket.id == socket.id);
 
-		let roomListen = userInfo.filter(res => res.room == userEmit.room);
-
-		let autor = userEmit.username;
-
-		roomListen.forEach(res => {
-			io.emit("sincronizar", info);
-			io.emit("mensaje-it", `${autor} sincronizó el vídeo`);
+		userInfo.forEach(res => {
+			res.socket.emit("sincronizar", info);
+			res.socket.emit("mensaje-it", `${userEmit.username} sincronizó el vídeo`);
 		})
+
 	})
 
-
+	// Cambiar el video
 	socket.on("requestVideoChange", (data) =>{
 
 		const str = data;

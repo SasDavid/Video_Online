@@ -18,15 +18,15 @@ socket.on("addUser", data=>{
 
   let documentFrag = document.createDocumentFragment();
 
-  for (let index = 0; index < data.length; index++) {
+  for (let i = 0; i < data.length; i++) {
     
     let createUsuario = document.createElement("DIV");
     createUsuario.classList.add("person");
-    createUsuario.innerHTML = `name: ${data[index].username} <br> 
-                                 status: ${data[index].status}`;
+    createUsuario.innerHTML = `name: ${data[i].username} <br> 
+                                 status: ${data[i].status}`;
 
     
-    if(data[index].username == identificador) {
+    if(data[i].username == identificador) {
       createUsuario.style.border = "1px solid #fff";
       createUsuario.style.order = "-1";
     } 
@@ -299,6 +299,8 @@ function onPlayerStateChange(event) {
     if(event.target.getDuration() > 0){
 
       on = true;
+
+      console.log(event)
 
       getDurationFija = player.getDuration();
       actualizarTime("all");
