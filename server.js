@@ -32,8 +32,8 @@ let videoURL = "";
 let nuevaURL = "";
 
 // const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const __dirname = import.meta.dirname;
-console.log(import.meta.dirname)
+const __dirname = import.meta.url;
+console.log(import.meta.url)
 
 // const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
