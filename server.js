@@ -31,11 +31,7 @@ app.use(cookieParser());
 let videoURL = "";
 let nuevaURL = "";
 
-// const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const __dirname = import.meta.url;
-console.log(import.meta.url)
-
-// const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 //start server
 server.listen(PORT, ()=>{
