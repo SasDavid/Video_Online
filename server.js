@@ -32,6 +32,9 @@ let videoURL = "";
 let nuevaURL = "";
 
 const __dirname = import.meta.dirname;
+console.log(__dirname)
+
+// const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 //start server
 server.listen(PORT, ()=>{
