@@ -51,9 +51,8 @@ app.get("/salaOculta", (req, res)=>{
 })
 
 
-
+// Crear una sala
 app.post(`/roomCreate`, (req, res)=>{
-	//Create a room
 
 	res.cookie('username', req.body, { httpOnly: true });
 
@@ -78,10 +77,10 @@ app.post(`/roomCreate`, (req, res)=>{
 
 })
 
+// Entrar a una sala
 app.get(`/room/:roomID`, (req, res)=>{
-	//Join to a room
 
-	// Entrando a una sala sin haberse logeado
+	// Entrar a una sala sin haberse logeado
 	if(req.cookies.username == undefined){
 
 		res.cookie("invited", req.params.roomID)
@@ -90,8 +89,9 @@ app.get(`/room/:roomID`, (req, res)=>{
 
 	}
 
+	// Entrar a una sala al estar logeado
 	if(roomOn.includes(req.params.roomID)){
-		console.log(req.params.roomID);
+		// console.log(req.params.roomID);
 		res.cookie('room', req.params.roomID, { httpOnly: true });
 		res.sendFile(path.join(__dirname, "public", "room", "index.html"));
 	} 
@@ -107,6 +107,8 @@ app.get(`/room/:roomID`, (req, res)=>{
 
 
 io.on('connection', (socket)=>{
+
+	console.log("Unido al servidor", socket.id);
 
 	let cookieSocket = socket.handshake.headers.cookie.split(";");
 	let videoplayback;
@@ -205,8 +207,6 @@ io.on('connection', (socket)=>{
 		io.emit("login", usuariosClient());
 
 	})
-
-	console.log("Unido al servidor", socket.id);
 
 
   socket.on('disconnect', () => {
