@@ -54,7 +54,8 @@ app.get("/salaOculta", (req, res)=>{
 // Crear una sala
 app.post(`/roomCreate`, (req, res)=>{
 
-	res.cookie('username', req.body, { httpOnly: true });
+	// res.cookie('username', req.body, { httpOnly: true });
+	res.cookie('username', req.body);
 
 	// Entrar a una por invitacion
 	if(req.cookies.invited != undefined){
@@ -83,7 +84,10 @@ app.get(`/room/:roomID`, (req, res)=>{
 	// Entrar a una sala sin haberse logeado
 	if(req.cookies.username == undefined){
 
-		res.cookie("invited", req.params.roomID)
+		if(roomOn.includes(req.params.roomID)) {
+			res.cookie("invited", req.params.roomID)
+		}
+
 		res.redirect("/");
 		return;
 
@@ -101,9 +105,6 @@ app.get(`/room/:roomID`, (req, res)=>{
 
 })
 
-// app.post("/login-room", (req, res)=>{
-// 	console.log(req.cookies)
-// })
 
 
 io.on('connection', (socket)=>{
@@ -116,12 +117,13 @@ io.on('connection', (socket)=>{
 	let username, room;
 
 	for(let element of cookieSocket){
-		if(element.split("=")[0] == "username"){
+		if(element.split("=")[0].includes("username")){
 			username = element.split("=")[1]
-		} else if(element.split("=")[0] == "room"){
+		} else if(element.split("=")[0].includes("room")){
 			room = element.split("=")[1]
 		}
 	}
+
 	
 	userInfo.push({
 		socket,
@@ -151,19 +153,6 @@ io.on('connection', (socket)=>{
 				return true;
 			}
 		})
-	}
-
-	if(videoplayback != undefined){
-
-		socket.emit("start", {
-			username: cookieSocket[0].split("=")[1],
-			video: videoplayback.video ?? ""
-		});
-
-	} else {
-		socket.emit("start", {
-			username: cookieSocket[0].split("=")[1]
-		});
 	}
 
 	// Modificar el status del usuario o agregar un usuario

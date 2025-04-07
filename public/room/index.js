@@ -5,20 +5,19 @@ let loginPlayer = null;
 
 let on = false;
 
-let identificador = "";
+let my_user = document.cookie.split(";")[0].split("=")[1];
+console.log(my_user)
 
-socket.on("start", (data)=>{
+console.log("Correct")
 
-  identificador = data.username;
-  if(data.video != undefined) WatchStatic = data.video;
-
-})
-
+// Agregar / actualizar la lista de usuarios
 socket.on("addUser", data=>{
 
   let documentFrag = document.createDocumentFragment();
 
   for (let i = 0; i < data.length; i++) {
+
+    // console.log(data)
     
     let createUsuario = document.createElement("DIV");
     createUsuario.classList.add("person");
@@ -26,7 +25,7 @@ socket.on("addUser", data=>{
                                  status: ${data[i].status}`;
 
     
-    if(data[i].username == identificador) {
+    if(data[i].username == my_user) {
       createUsuario.style.border = "1px solid #fff";
       createUsuario.style.order = "-1";
     } 
@@ -46,9 +45,9 @@ const containerOnline = document.getElementById("container-online");
 let getDurationFija;
 let getDurationFijaCompleta;
 
-setInterval(function() {
-  socket.emit('ping');
-}, 5000); 
+// setInterval(function() {
+//   socket.emit('ping');
+// }, 5000); 
 
 
 function barraAzulFull(){
@@ -829,7 +828,7 @@ function tituloLoading(info){
 }
 
 const videoTitle = document.getElementById("title-video");
-tituloLoading(0);
+// tituloLoading(0);
 
 const containerResumen = document.getElementById("container-svg-resumen");
 const iconResumen = document.querySelectorAll(".svg-resumen");
@@ -971,7 +970,7 @@ enviarMensaje.addEventListener("click", ()=>{
   socket.emit("mensaje", {msg: mensaje.value, num: numMensajes});
 
   const create = document.createElement("LI");
-  create.textContent = identificador + ": " + mensaje.value;
+  create.textContent = my_user + ": " + mensaje.value;
   create.classList.add("you");
 
   const msgPing = document.createElement("DIV");
