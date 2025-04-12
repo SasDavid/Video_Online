@@ -966,7 +966,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 .register-input::placeholder{
 	color: #C2C2C2;
+
 }
+
+
 
 .register-button{
 	width: 100px;
@@ -1281,10 +1284,6 @@ body::-webkit-scrollbar-corner{
 	    /* margin: 0 0 125px 20px; */
 	}
 
-	#container-online {
-	    /*justify-content: space-evenly;*/
-	}
-
 }
 
 @media screen and (min-width: 800px){
@@ -1303,9 +1302,6 @@ body::-webkit-scrollbar-corner{
 
 }
 
-#container-online {
-    width: 95%;
-}
 
 @media screen and (min-width: 1000px){
 

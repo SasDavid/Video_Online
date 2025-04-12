@@ -24,14 +24,14 @@
 	left: 0;
 	right: 0;
 	margin: auto;
-	width: 600px;
+	width: 90%;
+	min-width: 350px;
+	max-width: 600px;
 	height: 300px;
-	background: #232323;
+	background: #01083942;
 	padding: 2.5rem 6rem;
-	border: .2rem solid #e8e8e8;
-/*	box-shadow: 0 0 10px #afafaf;*/
-/*	animation-name: border_palpitante;
-	animation-duration: 2s;*/
+	border: .2rem solid #3b3b3b;
+
 	animation: border_palpitante 2s;
 	animation-direction: alternate;
 	animation-iteration-count: infinite;
@@ -58,9 +58,10 @@
 	text-align: center;
 	background: #000;
 	width: 100%;
+	min-width: 300px;
 	border-radius: .5rem;
 	height: 50px;
-	border: 3px solid #9b9b9b;
+	border: 3px solid #8f8f8f;
 	padding: .3rem;
 	outline: none;
 	font-size: 1.5rem;
@@ -76,18 +77,33 @@
 
 .register-input::placeholder{
 	color: #C2C2C2;
+
 }
 
-.register-button{
-	width: 200px;
-	height: 50px;
-	border-radius: 10px;
-	font-size: 1.4rem;
-	background: black;
-	border: 3px solid #9b9b9b;
-	color: white;
-	cursor: pointer;
+
+.register-button {
+    width: 80%;
+    min-width: 100px;
+    max-width: 200px;
+    height: 50px;
+    box-shadow: 0 0 5px #000000;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    border: 3px solid #8f8f8f;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(110deg, #000, #1b2f67 5% 15%, #000 45%);
+    background-size: 100% 100%;
+
+    transition: background-size .5s;
+    text-shadow: 0 0 20px #000;
+
 }
+
+.register-button:hover{
+	background-size: 300% 100%;
+}
+
 
 
 body::-webkit-scrollbar {
